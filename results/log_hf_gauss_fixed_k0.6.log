@@ -1,0 +1,13 @@
+gauss   fixed kappa=0.6: chi2=16.2 dof=7 (206s)
+   alpha_s  =  0.2729 ± 0.0326
+   sigma    =  4.5280 ± 0.9372
+   cc 1S: exp  112.81  model  112.40  pull -0.14
+   cc 2S: exp   48.30  model   56.67  pull +2.74
+   bb 1S: exp   61.70  model   57.95  pull -1.04
+   bb 2S: exp   24.40  model   26.43  pull +0.44
+   cb 1S: exp   64.50  model   58.46  pull -1.75
+   cb 2S: exp   35.40  model   29.42  pull -1.56
+   cc 1P: exp    0.07  model   -0.62  pull -1.32
+   bb 1P: exp   -0.57  model   -0.84  pull -0.29
+   bb 2P: exp   -0.44  model   -0.82  pull -0.29
+   extra: {'cb 1P': -0.5, 'cc 3S': 38.7, 'bb 3S': 17.6, 'cb 3S': 20.4}

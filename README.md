@@ -1,0 +1,83 @@
+# bc-hyperfine — the quarkonium hyperfine splittings as the arbiter of the contact interaction
+
+Code, fits and manuscript for
+
+> P. A. Oppong, *The heavy-quarkonium hyperfine splittings as the arbiter of
+> the contact interaction* (2026).
+
+Nine hyperfine observables are now measured — the S-wave splittings of
+cc̄, bb̄ and B_c for 1S and 2S (the last two from ATLAS 2026 and
+ATLAS+CMS), and the P-wave singlet–centroid offsets of h_c, h_b(1P),
+h_b(2P). Four prescriptions for the spin–spin contact term are fitted to
+them, with fixed or running coupling, on top of a spin-averaged potential
+and quark masses taken *fixed* from the model-independent centroid
+extraction of https://github.com/apoppong24/bc-potential-inverse, so that
+only the contact prescription is tested:
+
+| prescription | profile δ_X(r) | parameters |
+|---|---|---|
+| first-order | δ³(r), first-order perturbation theory | coupling only |
+| Gaussian | (σ/√π)³ e^{−σ²r²}, mass-independent (Barnes–Godfrey–Swanson) | σ |
+| Godfrey–Isgur | Gaussian with their mass-dependent width | σ₀, s |
+| Yukawa | m² e^{−mr}/4πr (form of the lattice spin–spin potential, Koma & Koma) | m |
+
+The smeared forms are solved non-perturbatively (singlet and triplet
+separately, S and P waves) with the Numerov solver of `quarkonium/`.
+
+Headline results (`results/hyperfine_analysis.md`):
+
+* **h_c kills smearing.** The h_c sits at the χ_cJ centroid to 0.2 MeV; a
+  Gaussian of σ = 1 GeV (the standard potential-model value) puts it 16 MeV
+  below. The r.m.s. radius of any contact term must be < 0.07 fm; every fit
+  pushes its width there on its own.
+* **The cc̄/bb̄ ratio fixes the Coulomb strength κ, which the spectrum cannot
+  see — jointly with the running.** With running α_s the data want
+  κ = 0.2–0.4 ≈ (4/3)α_s; with fixed α_s they want κ = 0. Mass-independent
+  smearing + running coupling fails at every κ (χ² > 80).
+* **The cc̄ 2S splitting is the universal outlier** (predicted 55–63 vs
+  48.3 MeV) — the size of the coupled-channel shift computed by Eichten,
+  Lane & Quigg (2004) for exactly these states.
+* **Without it, first-order perturbation theory with a running coupling and no
+  smearing fits the other eight with χ² = 2.8/7 and one parameter**
+  (Λ = 0.213 ± 0.011 GeV).
+* **B_c:** M(B_c*) − M(B_c) = 62 ± 1 ± 3 MeV, M(B_c*(2S)) − M(B_c(2S)) =
+  33 ± 1 ± 2 MeV (64.5 / 34.4 with the η_c-annihilation-corrected cc̄ input):
+  agrees with ATLAS (64.5 ± 1.7) and CMS, 2σ above lattice (54 ± 3).
+
+## Run
+
+```bash
+pip install -r requirements.txt
+python fit_hyperfine.py pert run --kappa 0.2          # presc: pert|gauss|gi|yukawa; coupling: run|fixed  (~20 s / ~5 min)
+python fit_hyperfine.py pert run --kappa 0.2 --exclude cc2S [--lattice-cc1S] [--floor 5]
+bash run_all.sh                                       # the full grid (~2 h on one core)
+python analyse_hyperfine.py                           # -> results/hyperfine_analysis.{md,json}, paper/figures/fig1-4
+python paper/make_tables.py                           # -> paper/tables/*.tex
+cd paper && latexmk -pdf main.tex
+python -m pytest                                      # solver + centroid + hyperfine tests
+```
+
+All fits used in the paper are committed under `results/` (`hf_*.json`,
+logs), together with the five spin-averaged potentials
+(`centroid_K6_lam1*.json`, κ = 0, 0.2, 0.4, 0.6, 0.8) they are built on.
+
+## Layout
+
+```
+quarkonium/hyperfine.py   data, the four prescriptions, non-perturbative singlet/triplet solution, fit
+quarkonium/               Numerov solver, spline potential (flexible.py), spin-dependent shifts, PDG 2026 data
+fit_hyperfine.py          CLI; analyse_hyperfine.py: comparison, κ scan, P-wave bound, B_c with errors, figures
+paper/                    main.tex, refs.bib, make_tables.py, figures/, tables/
+results/                  hf_*.json fits (+ logs), centroid_K6_lam1*.json base potentials, hyperfine_analysis.{md,json}
+tests/
+```
+
+## Acknowledgement
+
+Extends the author's MSc project at the University of Glasgow (supervisor
+Christine Davies). An AI assistant (Claude, Anthropic) was used to implement
+the fits and analysis scripts and to help draft the manuscript.
+
+## License
+
+MIT (see `LICENSE`).
