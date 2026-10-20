@@ -44,23 +44,31 @@ from .solver import solve
 # (pair, label, value MeV, error MeV, source).  S-wave: M(triplet) − M(singlet).
 # P-wave: M(h) − centroid of the χ triplet; vanishes for a pure contact term.
 HYPERFINE = [
-    ("cc", "1S", 112.81, 0.30, "J/psi − eta_c, PDG 2026"),
-    ("cc", "2S", 48.30, 0.60, "psi(2S) − eta_c(2S), PDG 2026"),
-    ("bb", "1S", 61.7, 2.0, "Upsilon(1S) − eta_b, PDG 2026"),
-    ("bb", "2S", 24.4, 3.5, "Upsilon(2S) − eta_b(2S), PDG 2026 (Belle)"),
-    ("cb", "1S", 64.5, 1.7, "B_c* − B_c, ATLAS 2026"),
-    ("cb", "2S", 35.4, 2.4, "B_c*(2S) − B_c(2S), ATLAS 2026 + CMS 2019"),
-    ("cc", "1P", 0.07, 0.15, "h_c − centroid(chi_c0,1,2), PDG 2026"),
-    ("bb", "1P", -0.57, 0.80, "h_b(1P) − centroid(chi_b(1P)), PDG 2026"),
-    ("bb", "2P", -0.44, 1.20, "h_b(2P) − centroid(chi_b(2P)), PDG 2026"),
+    # All masses from the 2026 Review of Particle Physics (summary tables and listings,
+    # https://pdg.lbl.gov/2026/), checked against the listings on 2026-10-20.
+    ("cc", "1S", 112.81, 0.30, "J/psi 3096.900(6) − eta_c 2984.09(30), PDG 2026"),
+    ("cc", "2S", 48.30, 0.60, "psi(2S) 3686.097(11) − eta_c(2S) 3637.8(6), PDG 2026"),
+    ("bb", "1S", 61.7, 2.0, "Upsilon(1S) 9460.40(10) − eta_b 9398.7(2.0), PDG 2026"),
+    # eta_b(2S): Belle (Mizuk 2012) 9999.0 ± 3.5 (+2.8 −1.9); OMITTED FROM THE PDG SUMMARY TABLE;
+    # Sandilya 2013 (Belle) found no evidence in a larger sample.  Asymmetric error symmetrised.
+    ("bb", "2S", 24.4, 4.2, "Upsilon(2S) 10023.4(5) − eta_b(2S) 9999.0(3.5)(+2.8/−1.9), Belle; not in PDG summary table"),
+    # ATLAS 2026, arXiv:2605.16228: 64.5 ± 1.4 (stat) +1.0/−1.4 (syst); syst symmetrised
+    ("cb", "1S", 64.5, 1.8, "B_c* − B_c, ATLAS 2026"),
+    # CMS 2019 (PRL 122, 132001): Delta_1S − Delta_2S = 29.1 ± 1.5 ± 0.7; combined with ATLAS Delta_1S
+    ("cb", "2S", 35.4, 2.5, "B_c*(2S) − B_c(2S) = [ATLAS Delta_1S] − [CMS Delta_1S − Delta_2S]"),
+    ("cc", "1P", 0.07, 0.15, "h_c 3525.37(14) − centroid(chi_c0,1,2) 3525.30, PDG 2026"),
+    ("bb", "1P", -0.57, 0.80, "h_b(1P) 9899.3(8) − centroid(chi_b(1P)) 9899.87, PDG 2026"),
+    ("bb", "2P", -0.44, 1.20, "h_b(2P) 10259.8(1.2) − centroid(chi_b(2P)) 10260.24, PDG 2026"),
 ]
-# lattice values, not fitted: used for comparison only
+# lattice values, not fitted: used for comparison only (checked against the arXiv abstracts 2026-10-20)
 LATTICE = {
-    ("cc", "1S"): (120.3, 1.1, "HPQCD 2020, connected only; eta_c annihilation −7.3(1.2)"),
-    ("bb", "1S"): (60.0, 6.4, "HPQCD 2014 lattice NRQCD"),
-    ("cb", "1S"): (54.0, 3.0, "HPQCD 2012"),
+    ("cc", "1S"): (120.3, 1.1, "HPQCD, Hatton et al. PRD 102, 054511 (2020): connected only; eta_c annihilation shift −7.3(1.2)"),
+    ("bb", "1S"): (57.5, 2.5, "HPQCD, Hatton et al. PRD 103, 054512 (2021): 57.5(2.3)(1.0), errors combined"),
+    ("bb", "1S", "NRQCD"): (60.0, 6.4, "HPQCD, Dowdall et al. PRD 89, 031502 (2014), lattice NRQCD"),
+    ("cb", "1S"): (54.0, 3.0, "HPQCD, Dowdall et al. PRD 86, 094510 (2012)"),
+    ("cb", "1S", "MPM"): (55.0, 3.0, "Mathur, Padmanath, Mondal PRL 121, 202002 (2018)"),
 }
-LATTICE_RATIO_BB = (0.445, 0.028, "HPQCD 2014: Δ(2S)/Δ(1S)")
+LATTICE_RATIO_BB = (0.445, 0.028, "HPQCD, Dowdall et al. 2014: Δ(2S)/Δ(1S)")
 
 PAIRS = {"cc": ("c", "c"), "bb": ("b", "b"), "cb": ("c", "b")}
 SPIN = {"singlet": -0.75, "triplet": 0.25}
@@ -204,15 +212,21 @@ class HyperfineFit:
         return HyperfineFit(**d)
 
 
-def base_potential(kappa: float = 0.0, results_dir="results") -> Potential:
-    """The centroid-extracted spline potential (companion paper) at the given κ."""
+def base_potential(kappa: float = 0.0, results_dir="results", dm_c: float = 0.0, dm_b: float = 0.0) -> Potential:
+    """The centroid-extracted spline potential (companion paper) at the given κ.
+    dm_c, dm_b shift the quark masses (GeV) with V(r) held fixed, for the
+    quark-mass systematic (the centroid fit gives ±0.024 and ±0.023)."""
     tag = "" if kappa == 0.0 else f"__kappa{kappa:g}"
-    return SplineFit.from_json(Path(results_dir) / f"centroid_K6_lam1{tag}.json").potential()
+    P = SplineFit.from_json(Path(results_dir) / f"centroid_K6_lam1{tag}.json").potential()
+    if dm_c or dm_b:
+        P = dataclasses.replace(P, m_c=P.m_c + dm_c, m_b=P.m_b + dm_b)
+    return P
 
 
 def fit_hyperfine(presc: str, coupling: str = "run", kappa: float = 0.0, floor_S=3.0, floor_P=0.5,
-                  h: float = 2e-3, verbose=True, results_dir="results", exclude=(), cc1S_lattice=False) -> HyperfineFit:
-    base = base_potential(kappa, results_dir)
+                  h: float = 2e-3, verbose=True, results_dir="results", exclude=(), cc1S_lattice=False,
+                  dm_c: float = 0.0, dm_b: float = 0.0) -> HyperfineFit:
+    base = base_potential(kappa, results_dir, dm_c, dm_b)
     spec = PRESCRIPTIONS[presc]; cp = COUPLING[coupling]
     names = cp["names"] + spec["names"]
     lo = np.array(cp["lo"] + spec["lo"]); hi = np.array(cp["hi"] + spec["hi"])

@@ -37,7 +37,7 @@ BOTTOMONIUM = {
     "13P1": (9892.78, 0.40),    # χ_b1(1P)
     "11P1": (9899.3, 0.8),      # h_b(1P)
     "13P2": (9912.21, 0.40),    # χ_b2(1P)
-    "21S0": (9999.0, 3.5),      # η_b(2S)  (Belle; PDG lists as "needs confirmation")
+    "21S0": (9999.0, 4.2),      # η_b(2S)  Belle 9999.0 ± 3.5 (+2.8/−1.9); OMITTED from the PDG summary table; asymmetric error symmetrised
     "23S1": (10023.4, 0.5),     # Υ(2S)
     "13D2": (10163.7, 1.4),     # Υ2(1D)
     "23P0": (10232.5, 0.64),    # χ_b0(2P)
@@ -53,15 +53,15 @@ BOTTOMONIUM_ABOVE_THRESHOLD = {"43S1": (10579.4, 1.2)}   # Υ(4S)
 BC = {
     "11S0": (6274.47, 0.32),    # B_c+
     "21S0": (6871.2, 1.0),      # B_c(2S)+
-    "13S1": (6339.0, 1.7),      # B_c*+  ATLAS 2026, arXiv:2605.16228 (stat+syst in quadrature)
+    "13S1": (6339.0, 1.8),      # B_c*+  ATLAS 2026, arXiv:2605.16228: 64.5 ± 1.4 (stat) +1.0/−1.4 (syst) above B_c
 }
 # Hyperfine observables (MeV)
-ATLAS_HYP_1S = (64.5, 1.7)      # m(B_c*+) - m(B_c+), ATLAS 2026
+ATLAS_HYP_1S = (64.5, 1.8)      # m(B_c*+) - m(B_c+), ATLAS 2026 (asymmetric syst symmetrised)
 CMS_HYP_DIFF = (29.1, 1.7)      # Delta_1S - Delta_2S, CMS 2019
 LHCB_HYP_DIFF = 30.9            # Delta_1S - Delta_2S, LHCb 2019 (peak difference)
 
-# Lattice QCD (HPQCD) reference values, MeV
-LATTICE_HYP_1S = (54.0, 3.0)    # M(B_c*) - M(B_c), Dowdall et al., PRD 86, 094510 (2012)
+# Lattice QCD reference values, MeV
+LATTICE_HYP_1S = (54.0, 3.0)    # M(B_c*) - M(B_c), HPQCD, Dowdall et al., PRD 86, 094510 (2012); Mathur et al. PRL 121, 202002 (2018): 55(3)
 LATTICE_BCSTAR = (6330.0, 9.0)  # M(B_c*), Gregory et al., PRL 104, 022001 (2010)
 LATTICE_F = {"cc": (394.7, 2.4),   # f_eta_c, Davies et al., PRD 82, 114504 (2010)
              "bb": (667.0, 6.0),   # f_eta_b, McNeile et al., PRD 86, 074503 (2012)

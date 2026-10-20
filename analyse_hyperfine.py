@@ -103,7 +103,9 @@ def main():
         pars = ", ".join(f"{n}={v:.3f}±{e:.3f}" for n, (v, e) in d["params"].items())
         md.append(f"| {k} | {d['chi2']:.1f} | {d['dof']} | {pars} | {d['alpha']['cc']:.3f} / {d['alpha']['bb']:.3f} | "
                   f"{d['width_fm']['cc']:.3f} / {d['width_fm']['bb']:.3f} | {d['bc']['M_Bcstar']:.1f} ± {d['bc_err']['d1S']:.1f} | {d['bc']['M_Bcstar2S']:.1f} ± {d['bc_err']['d2S']:.1f} | {d['bc']['d1_minus_d2']:.1f} ± {d['bc_err']['d1_minus_d2']:.1f} |")
-    md.append("\nExperiment: M(B_c*) = 6339.0 ± 1.7 (ATLAS), Δ1S−Δ2S = 29.1 ± 1.7 (CMS), 30.9 (LHCb); lattice M(B_c*) − M(B_c) = 54 ± 3 (HPQCD 2012).\n")
+    md.append("\nExperiment: M(B_c*) − M(B_c) = 64.5 ± 1.8 (ATLAS 2026), Δ1S−Δ2S = 29.1 ± 1.7 (CMS 2019), 30.9 (LHCb 2019); "
+              "lattice M(B_c*) − M(B_c) = 54 ± 3 (HPQCD 2012), 55 ± 3 (Mathur et al. 2018); bb̄ 1S lattice 57.5 ± 2.5 (HPQCD 2021), 60.0 ± 6.4 (HPQCD NRQCD 2014); "
+              "cc̄ 1S lattice connected 120.3 ± 1.1 (HPQCD 2020).\n")
     md.append("## Predictions (MeV) for every observable\n")
     md.append("| fit | " + " | ".join(f"{p} {l}" for p, l in OBS) + " |")
     md.append("|---|" + "---|" * len(OBS))
@@ -112,7 +114,7 @@ def main():
         d = S[k]
         md.append(f"| {k} | " + " | ".join(f"{d['pred'][f'{p} {l}']:.1f}" + (f" ({d['pulls'][f'{p} {l}']:+.1f})" if f"{p} {l}" in d["pulls"] else " (pred.)") for p, l in OBS) + " |")
     md.append("\n## 2S/1S ratios\n\n| fit | cc̄ | bb̄ | cb̄ |\n|---|---|---|---|")
-    md.append(f"| experiment | {48.30/112.81:.3f} | {24.4/61.7:.3f} ± {np.hypot(3.5/61.7, 24.4*2/61.7**2):.3f} | {35.4/64.5:.3f} |")
+    md.append(f"| experiment | {48.30/112.81:.3f} | {24.4/61.7:.3f} ± {np.hypot(4.2/61.7, 24.4*2/61.7**2):.3f} | {35.4/64.5:.3f} |")
     md.append(f"| lattice (HPQCD 2014) | – | {LATTICE_RATIO_BB[0]} ± {LATTICE_RATIO_BB[1]} | – |")
     for k in sorted(S, key=lambda k: (S[k]["kappa"], S[k]["coupling"], ORDER.index(S[k]["presc"]))):
         d = S[k]["bc"]

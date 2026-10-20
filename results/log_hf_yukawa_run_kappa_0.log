@@ -1,0 +1,13 @@
+yukawa  run   kappa=0: chi2=113.9 dof=7 (210s)
+   Lambda   =  0.1176 ± 0.0438
+   m        =  7.5884 ± 1.8872
+   cc 1S: exp  112.81  model  115.37  pull +0.85
+   cc 2S: exp   48.30  model   58.04  pull +3.18
+   bb 1S: exp   61.70  model   34.48  pull -7.55
+   bb 2S: exp   24.40  model   15.02  pull -1.82
+   cb 1S: exp   64.50  model   45.55  pull -5.42
+   cb 2S: exp   35.40  model   22.60  pull -3.28
+   cc 1P: exp    0.07  model   -0.78  pull -1.63
+   bb 1P: exp   -0.57  model   -0.72  pull -0.16
+   bb 2P: exp   -0.44  model   -0.68  pull -0.19
+   extra: {'cb 1P': -0.5, 'cc 3S': 40.1, 'bb 3S': 10.2, 'cb 3S': 15.7}

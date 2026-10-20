@@ -46,24 +46,66 @@ for k in MAIN:
 (OUT / "predictions.tex").write_text("\n".join(rows) + "\n\\bottomrule\n")
 
 # ---- Table 4: κ scan
-ks = A["kscan"]; kappas = sorted({float(k) for row in ks.values() for k in row})
+ks = {key: {float(k): v for k, v in row.items()} for key, row in A["kscan"].items()}
+kappas = sorted({k for row in ks.values() for k in row})
 rows = []
 for key in ["pert_run", "pert_fixed", "gauss_fixed", "gauss_run", "gi_run", "gi_fixed", "yukawa_fixed", "yukawa_run"]:
     if key not in ks:
         continue
     p, c = key.split("_")
-    rows.append(f"{NAME[p]} & {COUP[c]} & " + " & ".join(f"{ks[key][f'{k:g}']:.1f}" if f"{k:g}" in ks[key] else "--" for k in kappas) + r" \\")
-(OUT / "kscan.tex").write_text("\n".join(rows) + "\n\\bottomrule\n")
+    rows.append(f"{NAME[p]} & {COUP[c]} & " + " & ".join(f"{ks[key][k]:.1f}" if k in ks[key] else "--" for k in kappas) + r" \\")
+(OUT / "kscan.tex").write_text("\n".join(rows) + "\n\\midrule\n")      # the floor-5 block (kscan_floor5.tex) follows in the paper
 
-# ---- Table 5: B_c
-rows = []
-for k in ["pert_run_k0.2_nocc2S", "pert_run_k0.4_nocc2S", "gauss_fixed_k0.8_nocc2S", "yukawa_fixed_k0.8_nocc2S", "gi_run_k0.2_nocc2S", "pert_run_k0.2_nocc2S_latt"]:
+# ---- Table 5: B_c.  Block A: fits to cc̄+bb̄ only (the B_c splittings are predictions);
+# block B: fits including the B_c data (prescription spread).
+def bcrow(k, label):
     d = S[k]; b = d["bc"]; e = d["bc_err"]
-    latt = ", lattice $c\\bar c\\,1S$" if k.endswith("_latt") else ""
-    rows.append(f"{NAME[d['presc']]}, {COUP[d['coupling']]}, $\\kappa={d['kappa']:g}${latt} & {d['chi2']:.1f}/{d['dof']} & "
-                f"${b['M_Bcstar']-6274.5:.1f}\\pm{e['d1S']:.1f}$ & ${b['M_Bcstar2S']-6871.2:.1f}\\pm{e['d2S']:.1f}$ & "
-                f"${b['d1_minus_d2']:.1f}\\pm{e['d1_minus_d2']:.1f}$ & ${b['M_Bcstar']:.1f}$ & {d['extra']['cc 2S']:.1f} & {d['extra']['cb 1P']:+.1f} \\\\")
+    cc2s = d["extra"].get("cc 2S", d["pred"].get("cc 2S"))
+    return (f"{label} & {d['chi2']:.1f}/{d['dof']} & ${b['M_Bcstar']-6274.5:.1f}\\pm{e['d1S']:.1f}$ & ${b['M_Bcstar2S']-6871.2:.1f}\\pm{e['d2S']:.1f}$ & "
+            f"${b['d1_minus_d2']:.1f}\\pm{e['d1_minus_d2']:.1f}$ & ${b['M_Bcstar']:.1f}$ & {cc2s:.1f} & {d['extra']['cb 1P']:+.1f} \\\\")
+
+rows = []
+for k, lab in [("pert_run_k0.2_nocc2Scb1Scb2S", r"first-order, running, $\kappa=0.2$"),
+               ("pert_run_k0.4_nocc2Scb1Scb2S", r"first-order, running, $\kappa=0.4$"),
+               ("pert_run_k0.2_nocc2Scb1Scb2S_latt", r"first-order, running, $\kappa=0.2$, lattice $c\bar c\,1S$"),
+               ("gauss_fixed_k0.8_nocc2Scb1Scb2S", r"Gaussian, fixed, $\kappa=0.8$"),
+               ("yukawa_fixed_k0.8_nocc2Scb1Scb2S", r"Yukawa, fixed, $\kappa=0.8$"),
+               ("gi_run_k0.2_nocc2Scb1Scb2S", r"Godfrey--Isgur, running, $\kappa=0.2$")]:
+    if k in S:
+        rows.append(bcrow(k, lab))
+rows.append(r"\midrule")
+for k, lab in [("pert_run_k0.2_nocc2S", r"first-order, running, $\kappa=0.2$"),
+               ("pert_run_k0.4_nocc2S", r"first-order, running, $\kappa=0.4$"),
+               ("pert_run_k0.2_nocc2S_latt", r"first-order, running, $\kappa=0.2$, lattice $c\bar c\,1S$"),
+               ("gauss_fixed_k0.8_nocc2S", r"Gaussian, fixed, $\kappa=0.8$"),
+               ("yukawa_fixed_k0.8_nocc2S", r"Yukawa, fixed, $\kappa=0.8$"),
+               ("gi_run_k0.2_nocc2S", r"Godfrey--Isgur, running, $\kappa=0.2$")]:
+    if k in S:
+        rows.append(bcrow(k, lab))
 (OUT / "bc.tex").write_text("\n".join(rows) + "\n\\bottomrule\n")
+
+# ---- Table 5b: systematics on the first-order prediction (cc̄+bb̄ only, κ = 0.2)
+ref = S["pert_run_k0.2_nocc2Scb1Scb2S"]["bc"]
+rows = []
+for k, lab in [("pert_run_k0.4_nocc2Scb1Scb2S", r"$\kappa=0.4$ instead of $0.2$"),
+               ("pert_run_k0.2_nocc2Scb1Scb2S_dmc+0.024", r"$m_c+0.024\GeV$"), ("pert_run_k0.2_nocc2Scb1Scb2S_dmc-0.024", r"$m_c-0.024\GeV$"),
+               ("pert_run_k0.2_nocc2Scb1Scb2S_dmb+0.023", r"$m_b+0.023\GeV$"), ("pert_run_k0.2_nocc2Scb1Scb2S_dmb-0.023", r"$m_b-0.023\GeV$"),
+               ("pert_run_k0.2_nocc2Scb1Scb2S_latt", r"lattice (connected) $c\bar c\,1S$ input")]:
+    if k in S:
+        b = S[k]["bc"]
+        rows.append(f"{lab} & ${b['M_Bcstar']-ref['M_Bcstar']:+.1f}$ & ${b['M_Bcstar2S']-ref['M_Bcstar2S']:+.1f}$ \\\\")
+(OUT / "bc_syst.tex").write_text("\n".join(rows) + "\n\\bottomrule\n")
+
+# ---- κ scan with floor 5 (first-order)
+ks5 = {}
+for k, d in S.items():
+    if d["presc"] == "pert" and k.endswith("_floor5") and "no" not in k:
+        ks5.setdefault(d["coupling"], {})[d["kappa"]] = d["chi2"]
+rows = []
+for c in ("run", "fixed"):
+    if c in ks5:
+        rows.append(f"first-order, floor $5\\MeV$ & {COUP[c]} & " + " & ".join(f"{ks5[c][k]:.1f}" if k in ks5[c] else "--" for k in kappas) + r" \\")
+(OUT / "kscan_floor5.tex").write_text("\n".join(rows) + "\n\\bottomrule\n")
 
 # ---- Table 6: P-wave bound (κ = 0.4)
 rows = []

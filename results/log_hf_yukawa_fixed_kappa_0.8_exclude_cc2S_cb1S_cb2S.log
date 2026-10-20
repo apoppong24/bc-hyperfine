@@ -1,0 +1,10 @@
+yukawa  fixed kappa=0.8_nocc2Scb1Scb2S: chi2=1.5 dof=4 (226s)
+   alpha_s  =  0.1709 ± 0.0361
+   m        = 14.7255 ± 4.9088
+   cc 1S: exp  112.81  model  112.76  pull -0.02
+   bb 1S: exp   61.70  model   60.72  pull -0.27
+   bb 2S: exp   24.40  model   29.73  pull +1.03
+   cc 1P: exp    0.07  model   -0.15  pull -0.42
+   bb 1P: exp   -0.57  model   -0.21  pull +0.38
+   bb 2P: exp   -0.44  model   -0.21  pull +0.18
+   extra: {'cb 1P': -0.1, 'cc 3S': 40.0, 'bb 3S': 20.3, 'cb 3S': 18.4, 'cc 2S': 58.0, 'cb 1S': 50.0, 'cb 2S': 26.1}

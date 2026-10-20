@@ -1,0 +1,14 @@
+gi      run   kappa=0.4: chi2=21.0 dof=6 (329s)
+   Lambda   =  0.1400 ± 0.0471
+   sigma0   =  0.8606 ± 1.6272
+   s        =  2.1112 ± 0.5292
+   cc 1S: exp  112.81  model  110.47  pull -0.78
+   cc 2S: exp   48.30  model   55.29  pull +2.29
+   bb 1S: exp   61.70  model   66.85  pull +1.43
+   bb 2S: exp   24.40  model   31.52  pull +1.38
+   cb 1S: exp   64.50  model   56.77  pull -2.21
+   cb 2S: exp   35.40  model   28.84  pull -1.68
+   cc 1P: exp    0.07  model   -0.87  pull -1.81
+   bb 1P: exp   -0.57  model   -0.15  pull +0.45
+   bb 2P: exp   -0.44  model   -0.15  pull +0.22
+   extra: {'cb 1P': -0.3, 'cc 3S': 37.8, 'bb 3S': 21.7, 'cb 3S': 20.2}

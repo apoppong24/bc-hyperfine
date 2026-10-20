@@ -1,0 +1,12 @@
+pert    fixed kappa=0: chi2=30.1 dof=8 (15s)
+   alpha_s  =  0.3333 ± 0.0069
+   cc 1S: exp  112.81  model  101.92  pull -3.61
+   cc 2S: exp   48.30  model   56.60  pull +2.71
+   bb 1S: exp   61.70  model   70.21  pull +2.36
+   bb 2S: exp   24.40  model   33.45  pull +1.75
+   cb 1S: exp   64.50  model   67.11  pull +0.74
+   cb 2S: exp   35.40  model   35.55  pull +0.04
+   cc 1P: exp    0.07  model    0.00  pull -0.13
+   bb 1P: exp   -0.57  model    0.00  pull +0.60
+   bb 2P: exp   -0.44  model    0.00  pull +0.34
+   extra: {'cb 1P': 0.0, 'cc 3S': np.float64(40.7), 'bb 3S': np.float64(23.7), 'cb 3S': np.float64(25.5)}

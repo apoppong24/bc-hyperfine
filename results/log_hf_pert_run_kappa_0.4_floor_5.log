@@ -1,0 +1,12 @@
+pert    run   kappa=0.4_floor5: chi2=9.7 dof=8 (17s)
+   Lambda   =  0.1603 ± 0.0139
+   cc 1S: exp  112.81  model  106.25  pull -1.31
+   cc 2S: exp   48.30  model   58.75  pull +2.07
+   bb 1S: exp   61.70  model   66.46  pull +0.88
+   bb 2S: exp   24.40  model   32.89  pull +1.30
+   cb 1S: exp   64.50  model   60.99  pull -0.66
+   cb 2S: exp   35.40  model   32.65  pull -0.49
+   cc 1P: exp    0.07  model    0.00  pull -0.13
+   bb 1P: exp   -0.57  model    0.00  pull +0.60
+   bb 2P: exp   -0.44  model    0.00  pull +0.34
+   extra: {'cb 1P': 0.0, 'cc 3S': np.float64(42.0), 'bb 3S': np.float64(23.2), 'cb 3S': np.float64(23.4)}
