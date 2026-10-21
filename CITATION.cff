@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "The heavy-quarkonium hyperfine splittings as the arbiter of the contact interaction"
+authors:
+  - family-names: Oppong
+    given-names: Peter Agyemang
+    orcid: "https://orcid.org/0009-0009-4678-0034"
+    affiliation: "University of Glasgow"
+repository-code: "https://github.com/apoppong24/bc-hyperfine"
+type: software
+license: MIT

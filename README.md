@@ -1,5 +1,7 @@
 # bc-hyperfine — the quarkonium hyperfine splittings as the arbiter of the contact interaction
 
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--4678--0034-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-4678-0034)
+
 Code, fits and manuscript for
 
 > P. A. Oppong, *The heavy-quarkonium hyperfine splittings as the arbiter of
